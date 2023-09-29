@@ -11,4 +11,4 @@ output:
 
 ## Project thoughts
 
-I am interested in exploring data related to military recruiting and interest among young people in serving. American military recruiting is facing its biggest challenge in 50 years, so I want to use data to figure why people are not interested in serving, as well as what they value most in a job.
+I am interested in exploring data related to military recruiting and interest among young people in serving. American military recruiting is facing its biggest challenge in 50 years, so I want to use data to figure out why people are not interested in serving, as well as what they value most in a job.
