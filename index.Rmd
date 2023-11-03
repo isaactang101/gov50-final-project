@@ -19,7 +19,6 @@ Does foreign support increase the likelihood of a coup d’etat being successful
 library(tidyverse)
 
 coup_data <- read.csv("FinalProjectCoupData.csv")
-coup_data
 
 ```
 
@@ -38,7 +37,7 @@ coup_set <- coup_data |>
   group_by(Outcome, Interference)
 
 coup_plot <- ggplot(
-  data = coup_set, mapping = aes(x = outcome, fill = Interference
+  data = coup_set, mapping = aes(x = Outcome, fill = Interference
                                  )
 ) + 
   geom_bar(position = "dodge") +
@@ -58,5 +57,5 @@ coup_plot
 
 ```
 
-As shown by this bargraph, the vast majority of both successful and unsuccessful coups have not been backed by a foreign power.
+
 

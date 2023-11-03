@@ -115,7 +115,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.24/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
+  {"type":"character","attributes":{},"value":["FinalProjectCoupData.csv","index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/figure-html5/unnamed-chunk-2-1.png","index_files/FinalProjectCoupData.csv","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.24/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -1519,6 +1519,42 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <div class="d-article">
 <h2 id="project-proposal">Project Proposal</h2>
 <p>Does foreign support increase the likelihood of a coup d’etat being successful? In this study, I want to analyze the extent to which coup d’etats with a foreign backer result in a successful overthrow of an incumbent government. I hypothesize that coup attempts with foreign assistance are more likely to be able to seize power away from an incumbent government. Often, states that can lend support to coups in foreign countries are very powerful and have a lot of resources that they can utilize. This backing can come in the form of weapons supply, intelligence sharing, or even outright military or political support. Powerful countries that have backed coups in smaller states include the United States, United Kingdom, China, Russia/USSR, and France. These types of states all strive to maintain their national interests globally. Thus, not only can they provide the material support needed for a successful coup d’etat, they also have an incentive to ensure that any coup they support will end in success.My sample consists of 981 events that occurred between 1945 to the end of 2022. These events include 441 successful coups, 349 attempted coups and 191 coup conspiracies. Here, the explanatory variable of interest is whether or not the coup is characterized to have foreign backing (a foreign country provided support); this variable is labeled as “foreign”. The variable is coded as “= 1” for having foreign support, and “= 0” otherwise. The outcome variable of interest is the count of successful coup d’etats. In this dataset, it is characterized under “event_type”, and an event type of “coup” indicates that it is successful. Other event type outcomes include “attempted coup” (coup was initiated but defeated by the government) and “coup conspiracy” (coup was being planned but discovered before it could be initiated). This variable is measured from the Cline Center’s Coup d’État Project Dataset at the University of Illinois at Urbana-Champaign. If I observe that among coups with foreign backing have a higher success rate than coups without, then this would provide support for my hypothesis, However, if foreign backed coups have a lower success rate than coups without or if both types of coups have equal success rates, that would provide evidence against my hypothesis.</p>
+<h2 id="loading-data">Loading Data</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>coup_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='st'>"FinalProjectCoupData.csv"</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>coup_set</span> <span class='op'>&lt;-</span> <span class='va'>coup_data</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span></span>
+<span>    Outcome <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/if_else.html'>if_else</a></span><span class='op'>(</span><span class='va'>realized</span> <span class='op'>==</span><span class='fl'>1</span>, </span>
+<span>                      <span class='st'>"Successful"</span>,</span>
+<span>                      <span class='st'>"Unsuccessful"</span><span class='op'>)</span>,</span>
+<span>    Interference <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/if_else.html'>if_else</a></span><span class='op'>(</span></span>
+<span>      <span class='va'>foreign</span> <span class='op'>==</span> <span class='fl'>1</span>,</span>
+<span>      <span class='st'>"Foreign Interference"</span>,</span>
+<span>      <span class='st'>"No Foreign Interference"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>Outcome</span>, <span class='va'>Interference</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>coup_plot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span></span>
+<span>  data <span class='op'>=</span> <span class='va'>coup_set</span>, mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Outcome</span>, fill <span class='op'>=</span> <span class='va'>Interference</span></span>
+<span>                                 <span class='op'>)</span></span>
+<span><span class='op'>)</span> <span class='op'>+</span> </span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_bar</a></span><span class='op'>(</span>position <span class='op'>=</span> <span class='st'>"dodge"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span></span>
+<span>    x <span class='op'>=</span> <span class='st'>"Coup Outcome"</span>,</span>
+<span>    y <span class='op'>=</span> <span class='st'>"Number of Coups"</span>,</span>
+<span>    title <span class='op'>=</span> <span class='st'>"Foreign Intervention and Coup Outcomes"</span></span>
+<span>  <span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>coup_plot</span></span></code></pre>
+</div>
+<p><img src="index_files/figure-html5/unnamed-chunk-2-1.png" width="624" /></p>
+</div>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
