@@ -23,9 +23,11 @@ coup_data <- read.csv("FinalProjectCoupData.csv")
 ```
 
 
+## Foreign Involvement and Coup Outcome Bar Graph
+
 
 ```{r}
-coup_set <- coup_data |>
+coup_data <- coup_data |>
   mutate(
     Outcome = if_else(realized ==1, 
                       "Successful",
@@ -37,25 +39,72 @@ coup_set <- coup_data |>
   group_by(Outcome, Interference)
 
 coup_plot <- ggplot(
-  data = coup_set, mapping = aes(x = Outcome, fill = Interference
+  data = coup_data, mapping = aes(x = Outcome, fill = Interference
                                  )
 ) + 
   geom_bar(position = "dodge") +
   labs(
     x = "Coup Outcome",
     y = "Number of Coups",
-    title = "Foreign Intervention and Coup Outcomes"
+    title = "Foreign Involvement and Coup Outcomes"
   )
 
 coup_plot
 
-
-
-
-
-
-
 ```
 
+## Table for Number of Successful/Unsuccessful Coups by Type
 
+```{r}
+coup_count <- coup_data |>
+  count(Outcome)
 
+knitr::kable(coup_count, col.names = c("Coup Outcome", "Interference", "Number of Coups"))
+```
+
+As shown by this table, there are 76 foreign backed coup attempts in this dataset, with 33 being successful and 43 being unsuccessful, for a success rate of 0.434. There are 905 non-foreign backed coup attempts, with 408 being successful and 497 unsuccessful, for a success rate of 0.4508. Thus, in this sampling, non foreign backed coups actually have a higher rate of success than foreign backed ones, contrary to my hypothesis. We shall further test this hypothesis by using difference in means of average treatment effect when taking multiple samples.
+
+## Difference in Means and Treatment Effects
+
+```{r}
+coup_means<- coup_data|> 
+  group_by(Interference)|> 
+  summarize(realized_mean = mean(realized)) |> 
+  pivot_wider(names_from = Interference,
+              values_from = realized_mean)
+
+coup_means
+
+library(infer) 
+
+coup_boots<- coup_data |> 
+  rep_slice_sample(prop= 1,replace= TRUE,reps= 1000) |> 
+  group_by(replicate, Interference) |> 
+  summarize(realized_mean = mean(realized)) |> 
+  pivot_wider(names_from = Interference,
+              values_from = realized_mean) |> 
+  mutate(ATE = `Foreign Interference` - `No Foreign Interference`) 
+
+coup_boots
+
+ate_ci_95 <- coup_boots |>
+  select(replicate, ATE) |>
+  get_ci(level = 0.95, type = "percentile")
+
+ate_ci_95
+
+coup_boots|> ggplot(
+  mapping = aes(x= ATE))+ 
+  geom_histogram(aes(y= after_stat(density)), binwidth = 0.005) +
+  geom_vline(xintercept = unlist(ate_ci_95), color = "orange") +
+  labs(
+    x = "Average Treatment Effect of Foreign Interference",
+    y = "Density",
+    title = "Bootstrapped ATE for Foreign Interference in Coups (95% Confidence Interval)"
+  ) 
+  
+
+coup_boots
+
+```
+Based on the bootstrapping of average treatment effect for foreign interference, there is no evidence that foreign interference increases the likelihood of success for a coup attempt. In the 95% confidence interval, the lower confidence interval is -0.133 (which means that foreign backing is correlated with a lower coup success rate), and the upper confidence interval is 0.096 (foreign backing is correlated with higher success rate). It would be plausible to expect an ATE anywhere within this range, including zero (foreign backing having no effect on success or failure).Therefore, it is inconclusive what kind of effect that foreign interference has on the success rate of coups. My hypothesis that foreign backing increases the likelihood of coup success is not backed by this data.
