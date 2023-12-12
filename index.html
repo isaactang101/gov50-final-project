@@ -1596,7 +1596,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </tbody>
 </table>
 </div>
-<p>As shown by this table, there are 76 foreign backed coup attempts in this dataset, with 33 being successful and 43 being unsuccessful, for a success rate of 0.434. There are 905 non-foreign backed coup attempts, with 408 being successful and 497 unsuccessful, for a success rate of 0.4508. Thus, in this sampling, non foreign backed coups actually have a higher rate of success than foreign backed ones, contrary to my hypothesis. We shall further test this hypothesis by using differences in means of average treatment effect when taking multiple samples.</p>
+<p>As shown by this table, there are 76 foreign backed coup attempts in this dataset, with 33 being successful and 43 being unsuccessful, for a success rate of 0.434. There are 905 non-foreign backed coup attempts, with 408 being successful and 497 unsuccessful, for a success rate of 0.4508. Thus, in this sampling, non foreign backed coups actually have a higher rate of success than foreign backed ones, contrary to my hypothesis. We shall further test this hypothesis by using difference in means of average treatment effect when taking multiple samples.</p>
 <h2 id="difference-in-means-and-treatment-effects">Difference in Means and Treatment Effects</h2>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -1629,16 +1629,16 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 # Groups:   replicate [1,000]
    replicate `Foreign Interference` `No Foreign Interference`      ATE
        &lt;int&gt;                  &lt;dbl&gt;                     &lt;dbl&gt;    &lt;dbl&gt;
- 1         1                  0.417                     0.447 -0.0300 
- 2         2                  0.403                     0.489 -0.0861 
- 3         3                  0.434                     0.411  0.0228 
- 4         4                  0.328                     0.450 -0.122  
- 5         5                  0.442                     0.461 -0.0197 
- 6         6                  0.384                     0.454 -0.0702 
- 7         7                  0.379                     0.421 -0.0413 
- 8         8                  0.434                     0.474 -0.0407 
- 9         9                  0.438                     0.444 -0.00548
-10        10                  0.444                     0.476 -0.0316 
+ 1         1                  0.25                      0.463 -0.213  
+ 2         2                  0.514                     0.458  0.0562 
+ 3         3                  0.375                     0.419 -0.0441 
+ 4         4                  0.413                     0.481 -0.0679 
+ 5         5                  0.384                     0.430 -0.0460 
+ 6         6                  0.398                     0.470 -0.0723 
+ 7         7                  0.459                     0.453  0.00570
+ 8         8                  0.365                     0.473 -0.108  
+ 9         9                  0.423                     0.441 -0.0177 
+10        10                  0.394                     0.439 -0.0454 
 # ℹ 990 more rows</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>ate_ci_95</span> <span class='op'>&lt;-</span> <span class='va'>coup_boots</span> <span class='op'>|&gt;</span></span>
@@ -1650,7 +1650,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <pre><code># A tibble: 1 × 2
   lower_ci upper_ci
      &lt;dbl&gt;    &lt;dbl&gt;
-1   -0.127    0.114</code></pre>
+1   -0.129    0.103</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>coup_boots</span><span class='op'>|&gt;</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span></span>
 <span>  mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x<span class='op'>=</span> <span class='va'>ATE</span><span class='op'>)</span><span class='op'>)</span><span class='op'>+</span> </span>
@@ -1670,16 +1670,16 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 # Groups:   replicate [1,000]
    replicate `Foreign Interference` `No Foreign Interference`      ATE
        &lt;int&gt;                  &lt;dbl&gt;                     &lt;dbl&gt;    &lt;dbl&gt;
- 1         1                  0.417                     0.447 -0.0300 
- 2         2                  0.403                     0.489 -0.0861 
- 3         3                  0.434                     0.411  0.0228 
- 4         4                  0.328                     0.450 -0.122  
- 5         5                  0.442                     0.461 -0.0197 
- 6         6                  0.384                     0.454 -0.0702 
- 7         7                  0.379                     0.421 -0.0413 
- 8         8                  0.434                     0.474 -0.0407 
- 9         9                  0.438                     0.444 -0.00548
-10        10                  0.444                     0.476 -0.0316 
+ 1         1                  0.25                      0.463 -0.213  
+ 2         2                  0.514                     0.458  0.0562 
+ 3         3                  0.375                     0.419 -0.0441 
+ 4         4                  0.413                     0.481 -0.0679 
+ 5         5                  0.384                     0.430 -0.0460 
+ 6         6                  0.398                     0.470 -0.0723 
+ 7         7                  0.459                     0.453  0.00570
+ 8         8                  0.365                     0.473 -0.108  
+ 9         9                  0.423                     0.441 -0.0177 
+10        10                  0.394                     0.439 -0.0454 
 # ℹ 990 more rows</code></pre>
 </div>
 <p>Based on the bootstrapping of average treatment effect for foreign interference, there is no evidence that foreign interference increases the likelihood of success for a coup attempt. In the 95% confidence interval, the lower confidence interval is -0.133 (which means that foreign backing is correlated with a lower coup success rate), and the upper confidence interval is 0.096 (foreign backing is correlated with higher success rate). It would be plausible to expect an ATE anywhere within this range, including zero (foreign backing having no effect on success or failure).Therefore, it is inconclusive what kind of effect that foreign interference has on the success rate of coups. My hypothesis that foreign backing increases the likelihood of coup success is not backed by this data.</p>

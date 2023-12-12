@@ -1,7 +1,7 @@
 ---
 title: "Gov 50 Final Project"
 author: "Isaac Tang"
-description: "My final project"
+description: In this project, I will be exploring the impact of foreign interference on the outcomes of coup d'etats around the world from 1945 to 2019.
 output:
   distill::distill_article:
     self_contained: false
@@ -11,7 +11,9 @@ output:
 
 ## Project Proposal
 
-Does foreign support increase the likelihood of a coup d’etat being successful? In this study, I want to analyze the extent to which coup d'etats with a foreign backer result in a successful overthrow of an incumbent government. I hypothesize that coup attempts with foreign assistance are more likely to be able to seize power away from an incumbent government. Often, states that can lend support to coups in foreign countries are very powerful and have a lot of resources that they can utilize. This backing can come in the form of weapons supply, intelligence sharing, or even outright military or political support. Powerful countries that have backed coups in smaller states include the United States, United Kingdom, China, Russia/USSR, and France. These types of states all strive to maintain their national interests globally. Thus, not only can they provide the material support needed for a successful coup d’etat, they also have an incentive to ensure that any coup they support will end in success.My sample consists of 981 events that occurred between 1945 to the end of 2022. These events include 441 successful coups, 349 attempted coups and 191 coup conspiracies. Here, the explanatory variable of interest is whether or not the coup is characterized to have foreign backing (a foreign country provided support); this variable is labeled as “foreign”. The variable is coded as “= 1” for having foreign support, and “= 0” otherwise. The outcome variable of interest is the count of successful coup d’etats. In this dataset, it is characterized under “event_type”, and an event type of “coup” indicates that it is successful. Other event type outcomes include “attempted coup” (coup was initiated but defeated by the government) and “coup conspiracy” (coup was being planned but discovered before it could be initiated). This variable is measured from the Cline Center’s Coup d’État Project Dataset at the University of Illinois at Urbana-Champaign. If I observe that among coups with foreign backing have a higher success rate than coups without, then this would provide support for my hypothesis, However, if foreign backed coups have a lower success rate than coups without or if both types of coups have equal success rates, that would provide evidence against my hypothesis. 
+Does foreign support increase the likelihood of a coup d’etat being successful? In this study, I want to analyze the extent to which coup d'etats with a foreign backer result in a successful overthrow of an incumbent government. I hypothesize that coup attempts with foreign assistance are more likely to be able to seize power away from an incumbent government. Often, states that can lend support to coups in foreign countries are very powerful and have a lot of resources that they can utilize. This backing can come in the form of weapons supply, intelligence sharing, or even outright military or political support. Powerful countries that have backed coups in smaller states include the United States, United Kingdom, China, Russia/USSR, and France. These types of states all strive to maintain their national interests globally. Thus, not only can they provide the material support needed for a successful coup d’etat, they also have an incentive to ensure that any coup they support will end in success. 
+
+My sample consists of 981 events that occurred between 1945 to the end of 2022. These events include 441 successful coups, 349 attempted coups and 191 coup conspiracies. Here, the explanatory variable of interest is whether or not the coup is characterized to have foreign backing (a foreign country provided support); this variable is labeled as “foreign”. The variable is coded as “= 1” for having foreign support, and “= 0” otherwise. The outcome variable of interest is the count of successful coup d’etats. In this dataset, it is characterized under “event_type”, and an event type of “coup” indicates that it is successful. Other event type outcomes include “attempted coup” (coup was initiated but defeated by the government) and “coup conspiracy” (coup was being planned but discovered before it could be initiated). This variable is measured from the Cline Center’s Coup d’État Project Dataset at the University of Illinois at Urbana-Champaign. If I observe that among coups with foreign backing have a higher success rate than coups without, then this would provide support for my hypothesis, However, if foreign backed coups have a lower success rate than coups without or if both types of coups have equal success rates, that would provide evidence against my hypothesis. 
 
 ## Loading Data
 
@@ -19,6 +21,7 @@ Does foreign support increase the likelihood of a coup d’etat being successful
 library(tidyverse)
 
 coup_data <- read.csv("FinalProjectCoupData.csv")
+coup_data
 
 ```
 
@@ -64,19 +67,29 @@ knitr::kable(coup_count, col.names = c("Coup Outcome", "Interference", "Number o
 
 As shown by this table, there are 76 foreign backed coup attempts in this dataset, with 33 being successful and 43 being unsuccessful, for a success rate of 0.434. There are 905 non-foreign backed coup attempts, with 408 being successful and 497 unsuccessful, for a success rate of 0.4508. Thus, in this sampling, non foreign backed coups actually have a higher rate of success than foreign backed ones, contrary to my hypothesis. We shall further test this hypothesis by using difference in means of average treatment effect when taking multiple samples.
 
+
+
+
+
 ## Difference in Means and Treatment Effects
 
 ```{r}
-coup_means<- coup_data|> 
+
+## Estimating the Difference in Means
+coup_means<- coup_data |> 
   group_by(Interference)|> 
   summarize(realized_mean = mean(realized)) |> 
   pivot_wider(names_from = Interference,
               values_from = realized_mean)
 
-coup_means
+knitr::kable(coup_means, col.names = c("Foreign Interference", "No Foreign Interference"))
 
+```
+
+## Bootstrapped Foreign Interference ATE
+
+```{r}
 library(infer) 
-
 coup_boots<- coup_data |> 
   rep_slice_sample(prop= 1,replace= TRUE,reps= 1000) |> 
   group_by(replicate, Interference) |> 
@@ -86,13 +99,22 @@ coup_boots<- coup_data |>
   mutate(ATE = `Foreign Interference` - `No Foreign Interference`) 
 
 coup_boots
+```
 
+## 95% Confidence Interval
+
+```{r}
 ate_ci_95 <- coup_boots |>
   select(replicate, ATE) |>
   get_ci(level = 0.95, type = "percentile")
 
-ate_ci_95
+knitr::kable(ate_ci_95, col.names = c("Lower Confidence Interval", 
+                                      "Upper Confidence Interval"))
 
+```
+## Bootstrapped Coup Density Plot
+
+```{r}
 coup_boots|> ggplot(
   mapping = aes(x= ATE))+ 
   geom_histogram(aes(y= after_stat(density)), binwidth = 0.005) +
@@ -102,9 +124,56 @@ coup_boots|> ggplot(
     y = "Density",
     title = "Bootstrapped ATE for Foreign Interference in Coups (95% Confidence Interval)"
   ) 
-  
 
 coup_boots
 
 ```
+
+
 Based on the bootstrapping of average treatment effect for foreign interference, there is no evidence that foreign interference increases the likelihood of success for a coup attempt. In the 95% confidence interval, the lower confidence interval is -0.133 (which means that foreign backing is correlated with a lower coup success rate), and the upper confidence interval is 0.096 (foreign backing is correlated with higher success rate). It would be plausible to expect an ATE anywhere within this range, including zero (foreign backing having no effect on success or failure).Therefore, it is inconclusive what kind of effect that foreign interference has on the success rate of coups. My hypothesis that foreign backing increases the likelihood of coup success is not backed by this data.
+
+## Linear Regression Model for Foreign Difference in Means
+```{r}
+regression_model <- lm(formula = realized ~ foreign, data = coup_data)
+summary(regression_model)
+
+var_labels <- c(
+"(Intercept)" = "Intercept",
+"foreign" = "Foreign")
+
+modelsummary::modelsummary(regression_model,
+statistic = c("s.e. = {std.error}",
+"p = {p.value}"),
+coef_map = var_labels,
+gof_map = c("nobs", "r.squared", "adj.r.squared"))
+```
+
+
+
+## Multiple Regression Model for Foreign Difference in Means
+```{r}
+regression_model <- lm(formula = realized ~ foreign + military + rebel + dissident + palace + auto + resign + popular + counter + other, data = coup_data)
+summary(regression_model)
+
+var_labels <- c(
+"(Intercept)" = "Intercept",
+"foreign" = "Foreign",
+"military" = "Military",
+"rebel" = "Rebel",
+"dissident" = "Dissident",
+"palace" = "Palace (Plotted by Gov. Officials)",
+"auto" = "Auto (Conducted by Exisitng Head of State)",
+"resign" = "Resignation of Head of State",
+"popular" = "Popular Uprising Coup",
+"counter" = "Counter Coup",
+"other" = "Other Types of Coups"
+)
+
+modelsummary::modelsummary(regression_model,
+statistic = c("s.e. = {std.error}",
+"p = {p.value}"),
+coef_map = var_labels,
+gof_map = c("nobs", "r.squared", "adj.r.squared"))
+
+```
+
