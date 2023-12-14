@@ -1540,7 +1540,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <span></span>
 <span><span class='va'>coup_data</span> <span class='op'>&lt;-</span> <span class='va'>coup_data</span> <span class='op'>|&gt;</span></span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span></span>
-<span>    Outcome <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/if_else.html'>if_else</a></span><span class='op'>(</span><span class='va'>realized</span> <span class='op'>==</span><span class='fl'>1</span>, </span>
+<span>    Outcome <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/if_else.html'>if_else</a></span><span class='op'>(</span><span class='va'>realized</span> <span class='op'>==</span> <span class='fl'>1</span>, </span>
 <span>                      <span class='st'>"Successful"</span>,</span>
 <span>                      <span class='st'>"Unsuccessful"</span><span class='op'>)</span>,</span>
 <span>    Interference <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/if_else.html'>if_else</a></span><span class='op'>(</span></span>
@@ -1550,9 +1550,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>Outcome</span>, <span class='va'>Interference</span><span class='op'>)</span></span>
 <span></span>
 <span><span class='va'>coup_plot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span></span>
-<span>  data <span class='op'>=</span> <span class='va'>coup_data</span>, mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Outcome</span>, fill <span class='op'>=</span> <span class='va'>Interference</span></span>
-<span>                                 <span class='op'>)</span></span>
-<span><span class='op'>)</span> <span class='op'>+</span> </span>
+<span>  data <span class='op'>=</span> <span class='va'>coup_data</span>, mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Outcome</span>, fill <span class='op'>=</span> <span class='va'>Interference</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> </span>
 <span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_bar</a></span><span class='op'>(</span>position <span class='op'>=</span> <span class='st'>"dodge"</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span></span>
 <span>    x <span class='op'>=</span> <span class='st'>"Coup Outcome"</span>,</span>
@@ -1647,7 +1645,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <span></span>
 <span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/tidymodels/infer'>infer</a></span><span class='op'>)</span> </span>
 <span><span class='va'>coup_boots</span><span class='op'>&lt;-</span> <span class='va'>coup_data</span> <span class='op'>|&gt;</span> </span>
-<span>  <span class='fu'><a href='https://infer.tidymodels.org/reference/rep_sample_n.html'>rep_slice_sample</a></span><span class='op'>(</span>prop <span class='op'>=</span> <span class='fl'>1</span>,replace <span class='op'>=</span> <span class='cn'>TRUE</span>,reps <span class='op'>=</span> <span class='fl'>1000</span><span class='op'>)</span> <span class='op'>|&gt;</span> </span>
+<span>  <span class='fu'><a href='https://infer.tidymodels.org/reference/rep_sample_n.html'>rep_slice_sample</a></span><span class='op'>(</span>prop <span class='op'>=</span> <span class='fl'>1</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span>, reps <span class='op'>=</span> <span class='fl'>1000</span><span class='op'>)</span> <span class='op'>|&gt;</span> </span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>replicate</span>, <span class='va'>Interference</span><span class='op'>)</span> <span class='op'>|&gt;</span> </span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span><span class='op'>(</span>realized_mean <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>realized</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>|&gt;</span> </span>
 <span>  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span><span class='op'>(</span>names_from <span class='op'>=</span> <span class='va'>Interference</span>,</span>
@@ -1675,8 +1673,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">-0.1442404</td>
-<td style="text-align: right;">0.1044573</td>
+<td style="text-align: right;">-0.1356009</td>
+<td style="text-align: right;">0.104484</td>
 </tr>
 </tbody>
 </table>
@@ -2110,7 +2108,7 @@ R2 Adj.
 </tbody>
 </table>
 </div>
-<p>In the multiple regression, I included all of the other types of coups included in the Cline dataset. These coup variables are Military, Rebel, Dissident, Palace, Auto (coup conducted by existing head of state), Resignation of Head of State, Popular Uprising Coup, Counter Coup, and All Other Types of Coups. In this regression, the value of the intercept is 0.455; controlling for all the other coup types, the success rate is 45.5%. Once all of these other types of coups are controlled for, the value of the coefficient ‘foreign’ is 0.079. In the context of this regression, it means that on average, foreign backed coups appear to have a success rate that is 7.9 percentage points higher then the Intercept. Thus, the multiple regression model predicts that foreign backed coups have a success rate of 53.4%.</p>
+<p>In the multiple regression, I included all of the other types of coups included in the Cline data set. These coup variables are Military, Rebel, Dissident, Palace, Auto (coup conducted by existing head of state), Resignation of Head of State, Popular Uprising Coup, Counter Coup, and All Other Types of Coups. In this regression, the value of the intercept is 0.455; controlling for all the other coup types, the success rate is 45.5%. Once all of these other types of coups are controlled for, the value of the coefficient ‘foreign’ is 0.079. In the context of this regression, it means that on average, foreign backed coups appear to have a success rate that is 7.9 percentage points higher then the Intercept. Thus, the multiple regression model predicts that foreign backed coups have a success rate of 53.4%.</p>
 <p>At first glance, this regression appears to have a finding that is different to both the previous regression and the bootstrapping. Unlike those analyses, the multiple regression model predicts that foreign backing actually increases the success rate of coups, once confounding variables are accounted for. Such a finding would support my hypothesis that having foreign support increases the likelihood of a coup being successful.</p>
 <p>However, looking closer at the data, we can see that the p value for the coefficient ‘foreign’ is 0.116. This means that although the multiple regression predicts that foreign backing increases the success rate of coups, such a finding is not statistically significant at a 95% confidence interval, which is the standard confidence interval size. This is because the p value of 0.116 is greater than the alpha value of 0.05; in order for the result to be statistically significant, the p value must be smaller than the alpha value. Thus, the results of this regression model are not statistically significant, and cannot be used to definitively prove our hypothesis that foreign backing increases the likelihood of coups being successful. That being said, although this multiple regression cannot prove that foreign involvement increases the likelihood of a coup being successful, it does not show that foreign involvement decreases the likelihood of a coup being unsuccessful either.</p>
 <h2 id="conclusion">Conclusion</h2>
