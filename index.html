@@ -1673,8 +1673,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">-0.1350887</td>
-<td style="text-align: right;">0.0973908</td>
+<td style="text-align: right;">-0.1354401</td>
+<td style="text-align: right;">0.095753</td>
 </tr>
 </tbody>
 </table>
@@ -1701,7 +1701,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <p>To generate the most accurate model to determine the effect of foreign backing on coup outcomes, I will be running a regression with the independent variable ‘foreign’.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Main Variable Regression Model for Foreign Difference in Means</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Main Variable Regression Model for Foreign</span></span>
 <span></span>
 <span><span class='va'>regression_model</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span>formula <span class='op'>=</span> <span class='va'>realized</span> <span class='op'>~</span> <span class='va'>foreign</span>, data <span class='op'>=</span> <span class='va'>coup_data</span><span class='op'>)</span></span>
 <span></span>
@@ -1803,7 +1803,7 @@ R2 Adj.
 <p>Additionally, this linear regression only takes into account the ‘foreign’ variable and does not consider the impact of confounding variables, such as military involvement or rebellions. These confounders can influence both the independent variable of foreign involvement and dependent variable of coup outcome. For example, having a military supporting a coup attempt could influence a foreign government to support the attempt, as they view a military coup as more likely to succeed. Additionally, having a military or powerful domestic officials in a country support a coup could lead to an increased likelihood of success, with or without foreign backing. In order to gain a more accurate picture of the effects of foreign backing on the success rate of coups, I would need to control for these confounding variables. As such, more analysis is needed and in the next section, I will be running a multiple regression to account for such confounders.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Multiple Regression Model for Foreign Difference in Means</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Multiple Regression Model</span></span>
 <span></span>
 <span><span class='va'>regression_model</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span>formula <span class='op'>=</span> <span class='va'>realized</span> <span class='op'>~</span> <span class='va'>foreign</span> <span class='op'>+</span> <span class='va'>military</span> <span class='op'>+</span> </span>
 <span>                         <span class='va'>rebel</span> <span class='op'>+</span> <span class='va'>dissident</span> <span class='op'>+</span> <span class='va'>palace</span> <span class='op'>+</span> <span class='va'>auto</span> <span class='op'>+</span> <span class='va'>resign</span> <span class='op'>+</span> <span class='va'>popular</span> <span class='op'>+</span> <span class='va'>counter</span> <span class='op'>+</span> <span class='va'>other</span>, data <span class='op'>=</span> <span class='va'>coup_data</span><span class='op'>)</span></span>
