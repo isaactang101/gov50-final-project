@@ -140,7 +140,7 @@ Such a result provides evidence against my hypothesis that foreign backing incre
 To generate the most accurate model to determine the effect of foreign backing on coup outcomes, I will be running a regression with the independent variable 'foreign'.
 
 ```{r}
-## Main Variable Regression Model for Foreign Difference in Means
+## Main Variable Regression Model for Foreign
 
 regression_model <- lm(formula = realized ~ foreign, data = coup_data)
 
@@ -164,7 +164,7 @@ Additionally, this linear regression only takes into account the 'foreign' varia
 
 
 ```{r}
-## Multiple Regression Model for Foreign Difference in Means
+## Multiple Regression Model
 
 regression_model <- lm(formula = realized ~ foreign + military + 
                          rebel + dissident + palace + auto + resign + popular + counter + other, data = coup_data)
